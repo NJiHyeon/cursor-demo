@@ -29,6 +29,14 @@ test('isValidEmail은 RFC 5322에서 허용하는 형식을 인식한다', () =>
     assert.equal(isValidEmail('user@[00.0.0.0]'), false);
 });
 
+test('isValidEmail은 RFC 5321 최대 길이(254자)를 초과하면 false를 반환한다', () => {
+    const longLocal = 'a'.repeat(65);
+    const longDomain = `${'b'.repeat(63)}.${'c'.repeat(63)}.${'d'.repeat(57)}.com`;
+    const tooLong = `${longLocal}@${longDomain}`;
+    assert.equal(tooLong.length, 255);
+    assert.equal(isValidEmail(tooLong), false);
+});
+
 test('getValidEmails는 유효한 이메일만 반환한다', () => {
     const users = [
         { email: 'alice@example.com' },
